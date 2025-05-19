@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sorting Visualizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="center-container">
+    <h1>Sorting Visualizer</h1>
+    <div class="sort-options">
+      <label><input type="radio" name="sortType" value="bubble" checked> Bubble Sort</label>
+      <label><input type="radio" name="sortType" value="selection"> Selection Sort</label>
+      <label><input type="radio" name="sortType" value="insertion"> Insertion Sort</label>
+      <label><input type="radio" name="sortType" value="quick"> Quick Sort</label>
+      <label><input type="radio" name="sortType" value="merge"> Merge Sort</label>
+    </div>
+    <div class="input-group">
+      <button id="random-btn">Generate Random Array</button>
+      <span>or</span>
+      <input type="text" id="custom-array" placeholder="Enter array (e.g. 5,3,8,1)">
+    </div>
+    <div class="input-group">
+      <button id="run-btn">Run</button>
+      <button id="pause-btn">Pause</button>
+      <button id="resume-btn">Resume</button>
+      <button id="stop-btn">Stop</button>
+    </div>
+    <div id="visualizer"></div>
+  </div>
+  <script>
+    let stopRequested = false;
+    let pauseRequested = false;
+
+    function sleep(ms) {
+      return new Promise(resolve => {
+        function check() {
+          if (stopRequested) return resolve();
+          if (!pauseRequested) return setTimeout(resolve, ms);
+          setTimeout(check, 100);
+        }
+        check();
+      });
+    }
+
+    function renderArray(arr, highlightIdx = [], swappedIdx = [], sortedIdx = []) {
+      const visualizer = document.getElementById('visualizer');
+      visualizer.innerHTML = '';
+      arr.forEach((num, idx) => {
+        const bar = document.createElement('div');
+        bar.className = 'array-bar';
+        bar.style.height = (40 + num * 3) + 'px';
+        bar.textContent = num;
+        if (highlightIdx.includes(idx)) bar.classList.add('highlight');
+        if (swappedIdx.includes(idx)) bar.classList.add('swapped');
+        if (sortedIdx.includes(idx)) bar.classList.add('sorted');
+        visualizer.appendChild(bar);
+      });
+    }
+
+    function generateRandomArray(size = 8) {
+      const arr = [];
+      for (let i = 0; i < size; i++) {
+        arr.push(Math.floor(Math.random() * 30) + 1);
+      }
+      return arr;
+    }
+
+    let currentArray = generateRandomArray();
+    renderArray(currentArray);
+
+    document.getElementById('random-btn').onclick = function() {
+      stopRequested = true;
+      setTimeout(() => {
+        stopRequested = false;
+        currentArray = generateRandomArray();
+        renderArray(currentArray);
+        document.getElementById('custom-array').value = '';
+      }, 50);
+    };
+
+    document.getElementById('custom-array').oninput = function(e) {
+      stopRequested = true;
+      setTimeout(() => {
+        stopRequested = false;
+        const val = e.target.value;
+        if (val.trim() === '') return;
+        const arr = val.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+        if (arr.length) {
+          currentArray = arr;
+          renderArray(currentArray);
+        }
+      }, 50);
+    };
+
+    document.getElementById('run-btn').onclick = async function() {
+      stopRequested = false;
+      pauseRequested = false;
+      const sortType = document.querySelector('input[name="sortType"]:checked').value;
+      if (currentArray.length === 0) {
+        alert('Array is empty.');
+        return;
+      }
+      let arrCopy = [...currentArray];
+      if (sortType === 'bubble') {
+        await bubbleSortVisual(arrCopy);
+      } else if (sortType === 'selection') {
+        await selectionSortVisual(arrCopy);
+      } else if (sortType === 'insertion') {
+        await insertionSortVisual(arrCopy);
+      } else if (sortType === 'quick') {
+        await quickSortVisual(arrCopy, 0, arrCopy.length - 1);
+        renderArray(arrCopy, [], [], Array.from({length: arrCopy.length}, (_, i) => i));
+      } else if (sortType === 'merge') {
+        await mergeSortVisual(arrCopy, 0, arrCopy.length - 1);
+        renderArray(arrCopy, [], [], Array.from({length: arrCopy.length}, (_, i) => i));
+      }
+    };
+
+    document.getElementById('stop-btn').onclick = function() {
+      stopRequested = true;
+      pauseRequested = false;
+    };
+
+    document.getElementById('pause-btn').onclick = function() {
+      pauseRequested = true;
+    };
+
+    document.getElementById('resume-btn').onclick = function() {
+      pauseRequested = false;
+    };
+
+    async function bubbleSortVisual(arr) {
+      let n = arr.length;
+      for (let i = 0; i < n - 1; i++) {
+        for (let j = 0; j < n - i - 1; j++) {
+          if (stopRequested) return;
+          renderArray(arr, [j, j+1]);
+          await sleep(400);
+          if (arr[j] > arr[j+1]) {
+            [arr[j], arr[j+1]] = [arr[j+1], arr[j]];
+            renderArray(arr, [], [j, j+1]);
+            await sleep(400);
+          }
+        }
+      }
+      renderArray(arr, [], [], Array.from({length: arr.length}, (_, i) => i));
+    }
+
+    async function selectionSortVisual(arr) {
+      let n = arr.length;
+      for (let i = 0; i < n - 1; i++) {
+        let minIdx = i;
+        for (let j = i + 1; j < n; j++) {
+          if (stopRequested) return;
+          renderArray(arr, [minIdx, j]);
+          await sleep(400);
+          if (arr[j] < arr[minIdx]) {
+            minIdx = j;
+          }
+        }
+        if (minIdx !== i) {
+          [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+          renderArray(arr, [], [i, minIdx]);
+          await sleep(400);
+        }
+      }
+      renderArray(arr, [], [], Array.from({length: arr.length}, (_, i) => i));
+    }
+
+    async function insertionSortVisual(arr) {
+      let n = arr.length;
+      for (let i = 1; i < n; i++) {
+        if (stopRequested) return;
+        let key = arr[i];
+        let j = i - 1;
+        while (j >= 0 && arr[j] > key) {
+          if (stopRequested) return;
+          arr[j + 1] = arr[j];
+          renderArray(arr, [j, j+1]);
+          await sleep(400);
+          j = j - 1;
+        }
+        arr[j + 1] = key;
+        renderArray(arr, [], [j+1]);
+        await sleep(400);
+      }
+      renderArray(arr, [], [], Array.from({length: arr.length}, (_, i) => i));
+    }
+
+    async function quickSortVisual(arr, low, high) {
+      if (stopRequested) return;
+      if (low < high) {
+        let pi = await partition(arr, low, high);
+        await quickSortVisual(arr, low, pi - 1);
+        await quickSortVisual(arr, pi + 1, high);
+      }
+    }
+
+    async function partition(arr, low, high) {
+      let pivot = arr[high];
+      let i = low - 1;
+      for (let j = low; j < high; j++) {
+        if (stopRequested) return i + 1;
+        renderArray(arr, [j, high]);
+        await sleep(400);
+        if (arr[j] < pivot) {
+          i++;
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+          renderArray(arr, [], [i, j]);
+          await sleep(400);
+        }
+      }
+      [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+      renderArray(arr, [], [i+1, high]);
+      await sleep(400);
+      return i + 1;
+    }
+
+    async function mergeSortVisual(arr, l, r) {
+      if (stopRequested) return;
+      if (l < r) {
+        let m = Math.floor((l + r) / 2);
+        await mergeSortVisual(arr, l, m);
+        await mergeSortVisual(arr, m + 1, r);
+        await merge(arr, l, m, r);
+      }
+    }
+
+    async function merge(arr, l, m, r) {
+      let n1 = m - l + 1;
+      let n2 = r - m;
+      let L = [], R = [];
+      for (let i = 0; i < n1; i++) L.push(arr[l + i]);
+      for (let j = 0; j < n2; j++) R.push(arr[m + 1 + j]);
+      let i = 0, j = 0, k = l;
+      while (i < n1 && j < n2) {
+        if (stopRequested) return;
+        renderArray(arr, [k]);
+        await sleep(400);
+        if (L[i] <= R[j]) {
+          arr[k] = L[i];
+          i++;
+        } else {
+          arr[k] = R[j];
+          j++;
+        }
+        k++;
+      }
+      while (i < n1) {
+        if (stopRequested) return;
+        arr[k] = L[i];
+        renderArray(arr, [k]);
+        await sleep(400);
+        i++; k++;
+      }
+      while (j < n2) {
+        if (stopRequested) return;
+        arr[k] = R[j];
+        renderArray(arr, [k]);
+        await sleep(400);
+        j++; k++;
+      }
+    }
+  </script>
+</body>
+</html>

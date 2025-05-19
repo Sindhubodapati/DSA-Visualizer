@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Searching Visualizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="center-container">
+    <h1>Searching Visualizer</h1>
+    <div class="search-options">
+      <label>
+        <input type="radio" name="searchType" value="linear" checked>
+        Linear Search
+      </label>
+      <label>
+        <input type="radio" name="searchType" value="binary">
+        Binary Search
+      </label>
+    </div>
+    <div class="input-group">
+      <button id="random-btn">Generate Random Array</button>
+      <span>or</span>
+      <input type="text" id="custom-array" placeholder="Enter array (e.g. 3,1,4,2)">
+    </div>
+    <div class="input-group">
+      <input type="number" id="search-element" placeholder="Element to search">
+      <button id="run-btn">Run</button>
+      <button id="pause-btn">Pause</button>
+      <button id="resume-btn">Resume</button>
+      <button id="stop-btn">Stop</button>
+    </div>
+    <div id="visualizer"></div>
+  </div>
+  <script>
+    
+    
+    let stopRequested = false;
+    let pauseRequested = false;
+
+    function sleep(ms) {
+      return new Promise(resolve => {
+        function check() {
+          if (stopRequested) return resolve();
+          if (!pauseRequested) return setTimeout(resolve, ms);
+          setTimeout(check, 100);
+        }
+        check();
+      });
+    }
+
+    function renderArray(arr, highlightIdx = -1, foundIdx = -1) {
+      const visualizer = document.getElementById('visualizer');
+      visualizer.innerHTML = '';
+      arr.forEach((num, idx) => {
+        const bar = document.createElement('div');
+        bar.className = 'array-bar';
+        bar.style.height = (40 + num * 3) + 'px';
+        bar.textContent = num;
+        if (idx === highlightIdx) bar.classList.add('highlight');
+        if (idx === foundIdx) bar.classList.add('found');
+        visualizer.appendChild(bar);
+      });
+    }
+
+    function generateRandomArray(size = 8) {
+      const arr = [];
+      for (let i = 0; i < size; i++) {
+        arr.push(Math.floor(Math.random() * 30) + 1);
+      }
+      return arr;
+    }
+
+    let currentArray = generateRandomArray();
+    renderArray(currentArray);
+
+    document.getElementById('random-btn').onclick = function() {
+      stopRequested = true;
+      setTimeout(() => {
+        stopRequested = false;
+        currentArray = generateRandomArray();
+        renderArray(currentArray);
+        document.getElementById('custom-array').value = '';
+      }, 50);
+    };
+
+    document.getElementById('custom-array').oninput = function(e) {
+      stopRequested = true;
+      setTimeout(() => {
+        stopRequested = false;
+        const val = e.target.value;
+        if (val.trim() === '') return;
+        const arr = val.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+        if (arr.length) {
+          currentArray = arr;
+          renderArray(currentArray);
+        }
+      }, 50);
+    };
+
+    document.getElementById('run-btn').onclick = async function() {
+      stopRequested = false;
+      pauseRequested = false;
+      const searchType = document.querySelector('input[name="searchType"]:checked').value;
+      const searchElement = parseInt(document.getElementById('search-element').value);
+      if (isNaN(searchElement)) {
+        alert('Please enter a valid element to search.');
+        return;
+      }
+      if (currentArray.length === 0) {
+        alert('Array is empty.');
+        return;
+      }
+      let arrCopy = [...currentArray];
+      if (searchType === 'binary') {
+        arrCopy = arrCopy.sort((a, b) => a - b);
+        renderArray(arrCopy);
+        await binarySearchVisual(arrCopy, searchElement);
+      } else {
+        await linearSearchVisual(arrCopy, searchElement);
+      }
+    };
+
+    document.getElementById('stop-btn').onclick = function() {
+      stopRequested = true;
+      pauseRequested = false;
+    };
+
+    document.getElementById('pause-btn').onclick = function() {
+      pauseRequested = true;
+    };
+
+    document.getElementById('resume-btn').onclick = function() {
+      pauseRequested = false;
+    };
+
+    async function linearSearchVisual(arr, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (stopRequested) return;
+        renderArray(arr, i);
+        await sleep(600);
+        if (arr[i] === target) {
+          renderArray(arr, i, i);
+          return;
+        }
+      }
+      renderArray(arr, -1, -1);
+      alert('Element not found.');
+    }
+
+    async function binarySearchVisual(arr, target) {
+      let left = 0, right = arr.length - 1;
+      while (left <= right) {
+        if (stopRequested) return;
+        let mid = Math.floor((left + right) / 2);
+        renderArray(arr, mid);
+        await sleep(700);
+        if (arr[mid] === target) {
+          renderArray(arr, mid, mid);
+          return;
+        } else if (arr[mid] < target) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+      renderArray(arr, -1, -1);
+      alert('Element not found.');
+    }
+  </script>
+</body>
+</html>
