@@ -1,9 +1,8 @@
-# DSA Visualizer
+## DSA Visualizer
 
 A dynamic and interactive web application to visualize and understand popular Data Structures and Algorithms (DSA) such as Sorting and Searching.  
 This project is built with **HTML**, **CSS**, and **JavaScript**—no frameworks required!
 
----
 
 ## ✨ Features
 
@@ -19,7 +18,7 @@ This project is built with **HTML**, **CSS**, and **JavaScript**—no frameworks
 - **Centralized Styling:**  
   - All styles are managed in `style.css` for consistency and easy customization.
 
----
+
 
 ## 🚀 Getting Started
 
@@ -27,7 +26,7 @@ This project is built with **HTML**, **CSS**, and **JavaScript**—no frameworks
 2. Open the project folder in your code editor.
 3. Open `index.html` in your browser to launch the homepage.
 
----
+
 
 ## 📁 Project Structure
 
@@ -39,9 +38,8 @@ dsa-visualizer/
 ├── searching.html     # Searching visualizer page
 ├── style.css          # Centralized styles for all pages
 └── script.js          # (Optional) For shared JS logic if needed
-```
 
----
+```
 
 ## 🖥️ Usage
 
@@ -53,7 +51,7 @@ dsa-visualizer/
   - Enter the element to search (for searching).
   - Use **Run**, **Pause**, **Resume**, and **Stop** to control the animation.
 
----
+
 
 ## 🎨 Customization
 
@@ -62,7 +60,7 @@ dsa-visualizer/
 - **Algorithms:**  
   Add or modify algorithms in the respective HTML files’ `<script>` sections.
 
----
+
 
 ## 📷 Screenshots
 
