@@ -1,5 +1,5 @@
 
-# 📊 DSA Visualizer
+# 📊SORTSEARCH
 
 A dynamic and interactive web application to **visualize and understand Data Structures and Algorithms (DSA)** like Sorting and Searching.  
 Built using **HTML**, **CSS**, and **JavaScript**—with zero frameworks!
