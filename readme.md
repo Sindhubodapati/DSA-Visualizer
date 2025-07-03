@@ -7,7 +7,7 @@ Built using **HTML**, **CSS**, and **JavaScript**—with zero frameworks!
 
 ## 🔗 Live Demo
 
-👉 [Click here to try the live demo]([https://sindhubodapati.github.io/SORTSEARCH/])  
+👉 [Click here to try the live demo](https://sindhubodapati.github.io/SORTSEARCH/)  
 
 
 ## ✨ Features
