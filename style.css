@@ -1,110 +1,114 @@
-html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
 body {
-  background:black;
-  color: #f4f6fa;
-  height: 100vh;
-  width: 100vw;
+  background: linear-gradient(135deg, #181c2e 0%, #232946 100%);
+  color: #f6f8fb;
   font-family: 'Segoe UI', Arial, sans-serif;
+  height: 100vh;
+  margin: 0;
 }
 
 .center-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: rgba(28, 32, 48, 0.85);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 2rem 2.5rem;
 }
 
 h1 {
-  font-size: 2.5rem;
-  font-weight: 600;
+  font-size: 2.7rem;
+  font-weight: 700;
   margin-bottom: 1rem;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+}
+#title {
+  color: #17c3b2;
+  text-shadow: 0 2px 12px #0e7c86;
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1.23rem;
   margin-bottom: 2rem;
-  color: antiquewhite;
+  color: #ededed;
 }
 
 #select {
-  border: 1px solid #bfc9d1;
-  padding: 8px 16px;
+  border: 1px solid #29395e;
+  padding: 10px 18px;
   width: 180px;
-  height: 40px;
-  border-radius: 6px;
-  background: #f8fafc;
-  font-size: 1.1rem;
+  height: 44px;
+  border-radius: 8px;
+  background: #232946;
+  color: #f6f8fb;
+  font-size: 1.15rem;
   margin-bottom: 1.5rem;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
 }
 
 #select:focus {
-  border-color: #0078d4;
+  border-color: #17c3b2;
   outline: none;
+  background: #1a1f31;
 }
 
 #visualize-btn,
-
 #pause-btn,
 #resume-btn,
 #stop-btn,
 #random-btn {
-  padding: 10px 32px;
-  background: #0078d4;
+  padding: 12px 36px;
+  background: #17c3b2;
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1.1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.15s;
   margin-right: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(23,195,178,0.12);
 }
-#run-btn{
-   padding: 10px 32px;
-  background: #43a047;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-right: 0.5rem;
-
-}
-
 #visualize-btn:hover,
 #random-btn:hover {
-  background: #005fa3;
+  background: #159e92;
+  transform: translateY(-2px) scale(1.03);
 }
-#run-btn:hover{
-  background-color: green;
+
+#run-btn {
+  padding: 12px 36px;
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-right: 0.5rem;
+  box-shadow: 0 2px 8px 0 rgba(108,99,255,0.12);
+}
+#run-btn:hover {
+  background: #5848e5;
+  transform: translateY(-2px) scale(1.03);
 }
 
 #pause-btn, #resume-btn {
-  background: #ffb300;
+  background: #ffd166;
   color: #222;
 }
-
 #pause-btn:hover, #resume-btn:hover {
-  background: #ff8f00;
+  background: #fcb900;
 }
 
 #stop-btn {
-  background: #e53935;
+  background: #ef476f;
   color: #fff;
 }
-
 #stop-btn:hover {
-  background: #b71c1c;
+  background: #d90429;
 }
 
 .input-group {
@@ -134,37 +138,32 @@ h1 {
 
 .array-bar {
   width: 32px;
-  background: #0078d4;
+  background: #17c3b2;
   color: #fff;
   text-align: center;
   border-radius: 4px 4px 0 0;
   font-size: 1rem;
   transition: background 0.3s, color 0.3s;
   padding-top: 8px;
+  box-shadow: 0 2px 8px 0 rgba(23,195,178,0.09);
 }
 
 .highlight {
-  background: #ff9800 !important;
-  color: #fff !important;
+  background: #ffd166 !important;
+  color: #181c2e !important;
 }
 
-.found {
-  background: #43a047 !important;
-  color: #fff !important;
-}
-
+.found,
 .swapped {
-  background: #43a047 !important;
+  background: #6c63ff !important;
   color: #fff !important;
 }
 
 .sorted {
-  background: #8e24aa !important;
+  background: #ef476f !important;
   color: #fff !important;
 }
-#title{
-color: #234E70;
-}
+
 @media (max-width: 600px) {
   .center-container { padding: 1rem; }
   #select, .array-bar { width: 100%; }
